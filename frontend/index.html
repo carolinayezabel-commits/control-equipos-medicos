@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Control de Equipos Médicos</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🏥 Control de Equipos Médicos</h1>
+            <p class="subtitle">Sistema de Registro de Equipos de Laboratorio</p>
+        </header>
+
+        <div class="status-indicator" id="statusIndicator">
+            <span class="status-dot"></span>
+            <span id="statusText">Verificando conexión...</span>
+        </div>
+
+        <form id="equipoForm" class="equipo-form">
+            <h2>📋 Registrar Nuevo Equipo</h2>
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="nombre">Nombre del Equipo *</label>
+                    <input type="text" id="nombre" placeholder="Ej: Microscopio Olympus CX23" required>
+                </div>
+                <div class="form-group">
+                    <label for="tipo">Tipo de Equipo *</label>
+                    <select id="tipo" required>
+                        <option value="">Seleccionar tipo...</option>
+                        <option value="Microscopio">Microscopio</option>
+                        <option value="Centrífuga">Centrífuga</option>
+                        <option value="Espectrofotómetro">Espectrofotómetro</option>
+                        <option value="Incubadora">Incubadora</option>
+                        <option value="Autoclave">Autoclave</option>
+                        <option value="Balanza">Balanza</option>
+                        <option value="pH-metro">pH-metro</option>
+                        <option value="Termociclador">Termociclador</option>
+                        <option value="Otro">Otro</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="estado">Estado *</label>
+                    <select id="estado" required>
+                        <option value="">Seleccionar estado...</option>
+                        <option value="Operativo">Operativo</option>
+                        <option value="En reparación">En reparación</option>
+                        <option value="En mantenimiento">En mantenimiento</option>
+                        <option value="Fuera de servicio">Fuera de servicio</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="ubicacion">Ubicación *</label>
+                    <input type="text" id="ubicacion" placeholder="Ej: Laboratorio A" required>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="observaciones">Observaciones</label>
+                <textarea id="observaciones" rows="2" placeholder="Observaciones sobre el equipo..."></textarea>
+            </div>
+            <button type="submit" class="btn btn-primary">➕ Registrar Equipo</button>
+        </form>
+
+        <div class="equipos-container">
+            <h2>📊 Equipos Registrados</h2>
+            <div id="equiposList" class="equipos-list">
+                <div class="loading">Cargando equipos...</div>
+            </div>
+        </div>
+
+        <footer>
+            <p>🏥 Sistema de Control de Equipos Médicos | Desplegado en: <span id="deployPlatform">Render Cloud</span></p>
+            <p>API: <code id="apiEndpoint">Cargando...</code></p>
+        </footer>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
