@@ -1,4 +1,10 @@
-const API_BASE_URL = 'http://localhost:10000';
+const isLocalhost = window.location.hostname === 'localhost' || 
+                   window.location.hostname === '127.0.0.1';
+
+const API_BASE_URL = isLocalhost 
+    ? 'http://localhost:10000'
+    : 'https://control-equipos-medicos-api.onrender.com';
+
 const API_URL = `${API_BASE_URL}/api`;
 
 let equipos = [];
@@ -10,7 +16,7 @@ const statusText = document.getElementById('statusText');
 const apiEndpoint = document.getElementById('apiEndpoint');
 
 document.addEventListener('DOMContentLoaded', () => {
-    console.log('🏥 Control de Equipos Médicos Iniciado');
+    console.log('Control de Equipos Medicos Iniciado');
     apiEndpoint.textContent = API_BASE_URL;
     checkAPIConnection();
     loadEquipos();
@@ -43,7 +49,7 @@ async function checkAPIConnection() {
         if (!response.ok) throw new Error(`HTTP ${response.status}`);
         
         const healthData = await response.json();
-        updateStatus('connected', 'Conectado a la API | Localhost:10000');
+        updateStatus('connected', 'Conectado a la API | Render Cloud');
         console.log('API Health Check:', healthData);
     } catch (error) {
         updateStatus('error', `Error: ${error.message}`);
@@ -128,13 +134,7 @@ function getEstadoClass(estado) {
 
 function renderEquipos() {
     if (equipos.length === 0) {
-        equiposList.innerHTML = `
-            <div class="empty-state">
-                <div class="empty-icon">🔬</div>
-                <h3>No hay equipos registrados</h3>
-                <p>Registra tu primer equipo usando el formulario</p>
-            </div>
-        `;
+        equiposList.innerHTML = '<div class="empty-state"><div class="empty-icon">🔬</div><h3>No hay equipos registrados</h3></div>';
         return;
     }
     
@@ -145,24 +145,12 @@ function renderEquipos() {
                 <span class="estado-badge ${getEstadoClass(equipo.estado)}">${equipo.estado}</span>
             </div>
             <div class="equipo-info">
-                <div class="info-item">
-                    <span class="info-label">Tipo:</span>
-                    <span class="info-value">${escapeHtml(equipo.tipo)}</span>
-                </div>
-                <div class="info-item">
-                    <span class="info-label">Ubicacion:</span>
-                    <span class="info-value">${escapeHtml(equipo.ubicacion)}</span>
-                </div>
-                <div class="info-item">
-                    <span class="info-label">Ultimo Mant.:</span>
-                    <span class="info-value">${equipo.ultimoMantenimiento}</span>
-                </div>
-                <div class="info-item">
-                    <span class="info-label">Proximo Mant.:</span>
-                    <span class="info-value">${equipo.proximoMantenimiento}</span>
-                </div>
+                <div class="info-item"><span class="info-label">Tipo:</span><span class="info-value">${escapeHtml(equipo.tipo)}</span></div>
+                <div class="info-item"><span class="info-label">Ubicacion:</span><span class="info-value">${escapeHtml(equipo.ubicacion)}</span></div>
+                <div class="info-item"><span class="info-label">Ultimo Mant.:</span><span class="info-value">${equipo.ultimoMantenimiento}</span></div>
+                <div class="info-item"><span class="info-label">Proximo Mant.:</span><span class="info-value">${equipo.proximoMantenimiento}</span></div>
             </div>
-            ${equipo.observaciones ? `<p style="color:#666; font-size:0.9rem; margin-top:5px;">📝 ${escapeHtml(equipo.observaciones)}</p>` : ''}
+            ${equipo.observaciones ? '<p style="color:#666;font-size:0.9rem;">📝 ' + escapeHtml(equipo.observaciones) + '</p>' : ''}
             <div class="equipo-actions">
                 <button onclick="deleteEquipo('${equipo.id}')" class="btn btn-small btn-delete">🗑 Eliminar</button>
             </div>
@@ -170,17 +158,13 @@ function renderEquipos() {
     `).join('');
 }
 
-function showNotification(message, type = 'info') {
-    const notification = document.createElement('div');
-    notification.className = `notification notification-${type}`;
-    notification.textContent = message;
-    document.body.appendChild(notification);
-    
-    setTimeout(() => notification.classList.add('show'), 10);
-    setTimeout(() => {
-        notification.classList.remove('show');
-        setTimeout(() => notification.remove(), 300);
-    }, 3000);
+function showNotification(message, type) {
+    const n = document.createElement('div');
+    n.className = 'notification notification-' + type;
+    n.textContent = message;
+    document.body.appendChild(n);
+    setTimeout(() => n.classList.add('show'), 10);
+    setTimeout(() => { n.classList.remove('show'); setTimeout(() => n.remove(), 300); }, 3000);
 }
 
 function escapeHtml(text) {
