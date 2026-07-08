@@ -116,7 +116,7 @@ header h1 {
 .form-group select:focus,
 .form-group textarea:focus {
     outline: none;
-    border-color: #0c5e8a;
+    border-color: #6acafe;
 }
 
 .btn {

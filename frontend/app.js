@@ -7,6 +7,9 @@ const API_BASE_URL = isLocalhost
 
 const API_URL = `${API_BASE_URL}/api`;
 
+// API Key de seguridad
+const API_KEY = 'equipos-medicos-seguro-2026';
+
 let equipos = [];
 
 const equiposList = document.getElementById('equiposList');
@@ -16,7 +19,7 @@ const statusText = document.getElementById('statusText');
 const apiEndpoint = document.getElementById('apiEndpoint');
 
 document.addEventListener('DOMContentLoaded', () => {
-    console.log('Control de Equipos Medicos Iniciado');
+    console.log('Control de Equipos Medicos - Seguro');
     apiEndpoint.textContent = API_BASE_URL;
     checkAPIConnection();
     loadEquipos();
@@ -48,12 +51,9 @@ async function checkAPIConnection() {
         const response = await fetch(`${API_BASE_URL}/health`);
         if (!response.ok) throw new Error(`HTTP ${response.status}`);
         
-        const healthData = await response.json();
         updateStatus('connected', 'Conectado a la API | Render Cloud');
-        console.log('API Health Check:', healthData);
     } catch (error) {
         updateStatus('error', `Error: ${error.message}`);
-        console.error('Error:', error);
     }
 }
 
@@ -66,7 +66,9 @@ function updateStatus(state, message) {
 
 async function loadEquipos() {
     try {
-        const response = await fetch(`${API_URL}/equipos`);
+        const response = await fetch(`${API_URL}/equipos`, {
+            headers: { 'x-api-key': API_KEY }
+        });
         const result = await response.json();
         
         if (result.success) {
@@ -83,7 +85,10 @@ async function createEquipo(data) {
     try {
         const response = await fetch(`${API_URL}/equipos`, {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
+            headers: {
+                'Content-Type': 'application/json',
+                'x-api-key': API_KEY
+            },
             body: JSON.stringify(data)
         });
         
@@ -108,7 +113,8 @@ async function deleteEquipo(id) {
     
     try {
         const response = await fetch(`${API_URL}/equipos/${id}`, {
-            method: 'DELETE'
+            method: 'DELETE',
+            headers: { 'x-api-key': API_KEY }
         });
         
         const result = await response.json();
